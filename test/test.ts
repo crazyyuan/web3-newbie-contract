@@ -3,7 +3,8 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 
 describe("Web3WomenNewbie", function () {
-  const baseURI = "https://api-preview.frenart.io/member/governance/metaData/";
+  const baseURI =
+    "ipfs://bafybeihylw5ehx5tm636pzfm3crrxrlf56i6avxvvmsbrpnx4vyaisdz54/";
 
   async function deployFixture() {
     const [owner, member] = await ethers.getSigners();

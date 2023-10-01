@@ -1,7 +1,9 @@
 {
   "name": "hardhat-project",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.8.2"
+    "@openzeppelin/contracts": "^4.8.2",
+    "@chainlink/contracts": "^0.7.1",
+    "@uniswap/lib": "^4.0.1-alpha"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.4.7",

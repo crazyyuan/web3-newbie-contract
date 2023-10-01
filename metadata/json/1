@@ -1,0 +1,11 @@
+{
+	"description": "web3 新手村第1天.",
+	"image": "ipfs://bafybeiee2izhnbou763wmwyptsdyrjitsytatflfn3brxzqvksfrepsdcu/1.png",
+	"name": "Day 1",
+	"attributes": [
+		{
+			"trait_type": "Number",
+			"value": "1"
+		}
+	]
+}
