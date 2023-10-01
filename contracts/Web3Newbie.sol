@@ -25,12 +25,11 @@ contract Web3WomenNewbie is ERC721Enumerable, Ownable {
     }
 
     function mint() external payable {
-        require(totalSupply() >= maxSupply, "Mint exceed max supply");
+        require(totalSupply() < maxSupply, "Mint exceed max supply");
         require(price <= msg.value, "Ether value sent is not correct");
 
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
-        _safeMint(_msgSender(), tokenId);
+        uint256 mintIndex = totalSupply();
+        _safeMint(_msgSender(), mintIndex + 1);
     }
 
     function setBaseURI(string memory _baseURI) public onlyOwner {
