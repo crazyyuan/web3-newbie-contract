@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract Web3WomenNewbie is ERC721Enumerable, Ownable {
+contract Web3NewbieD3 is ERC721Enumerable, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
 
@@ -19,7 +19,7 @@ contract Web3WomenNewbie is ERC721Enumerable, Ownable {
     constructor(
         string memory _baseURI,
         uint256 _maxSupply
-    ) ERC721("Web3WomenNewbie", "WNW") {
+    ) ERC721("Web3WomenNewbieD3", "WNWD3") {
         baseURI = _baseURI;
         maxSupply = _maxSupply;
     }
