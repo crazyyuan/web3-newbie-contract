@@ -30,6 +30,8 @@ contract Web3WomenNewbieD4 is ERC721Enumerable, Ownable {
     bytes32 public merkleRoot;
     mapping(address => uint256) whiteListMints;
 
+    address[] public whiteList;
+
     constructor(
         string memory _baseURI,
         uint256 _maxSupply
@@ -45,6 +47,15 @@ contract Web3WomenNewbieD4 is ERC721Enumerable, Ownable {
 
     function setMerkleRoot(bytes32 _merkleRoot) public onlyOwner {
         merkleRoot = _merkleRoot;
+    }
+
+    function setAllowList(address[] calldata list) public onlyOwner {
+        for (uint256 i = 0; i < whiteList.length; i++) {
+            whiteList.pop();
+        }
+        for (uint256 i = 0; i < list.length; i++) {
+            whiteList.push(list[i]);
+        }
     }
 
     function mint() external payable {
@@ -74,7 +85,7 @@ contract Web3WomenNewbieD4 is ERC721Enumerable, Ownable {
         }
     }
 
-    function allowlistMint(bytes32[] calldata merkleProof) external payable {
+    function allowlistMint2(bytes32[] calldata merkleProof) external payable {
         require(
             status == Status.AllowListOnly || status == Status.Started,
             "Status error"
@@ -93,6 +104,37 @@ contract Web3WomenNewbieD4 is ERC721Enumerable, Ownable {
             MerkleProof.verify(merkleProof, merkleRoot, leaf),
             "the whitelist mismatch."
         );
+
+        uint256 tokenId = _tokenIdCounter.current();
+        _safeMint(from, tokenId);
+        _tokenIdCounter.increment();
+
+        refundIfOver(allowPrice);
+
+        whiteListMints[from] = 1;
+    }
+
+    function allowlistMint() external payable {
+        require(
+            status == Status.AllowListOnly || status == Status.Started,
+            "Status error"
+        );
+
+        require(totalSupply() < maxSupply, "Mint exceed max supply");
+        require(allowPrice <= msg.value, "Ether value sent is not correct");
+
+        address from = _msgSender();
+
+        require(whiteListMints[from] < 1, "You have minted in allow list");
+
+        bool verified = false;
+        for (uint256 i = 0; i < whiteList.length; i++) {
+            if (from == whiteList[i]) {
+                verified = true;
+                break;
+            }
+        }
+        require(verified, "the whitelist mismatch.");
 
         uint256 tokenId = _tokenIdCounter.current();
         _safeMint(from, tokenId);

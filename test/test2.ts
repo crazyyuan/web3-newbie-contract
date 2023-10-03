@@ -76,6 +76,26 @@ describe("Web3WomenNewbie", function () {
 
     const amountIn = ethers.utils.parseEther("0.0005");
     const proof = merkleTree.getHexProof(keccak256(user1.address));
-    await contract.connect(user1).allowlistMint(proof, { value: amountIn });
+    await contract.connect(user1).allowlistMint2(proof, { value: amountIn });
+  });
+
+  it("#5 - Allow list mint", async function () {
+    const { contract, owner, user1, user2, user3 } = await loadFixture(
+      deployFixture
+    );
+
+    await contract.connect(owner).setStatus(3);
+
+    await contract
+      .connect(owner)
+      .setAllowList([user1.address, user2.address, user3.address]);
+
+    const amountIn = ethers.utils.parseEther("0.0005");
+
+    await contract.connect(user1).allowlistMint({ value: amountIn });
+
+    await contract.connect(owner).setAllowList([user1.address, user2.address]);
+
+    await contract.connect(user2).allowlistMint({ value: amountIn });
   });
 });
