@@ -56,9 +56,7 @@ describe("Web3WomenNewbie", function () {
 
     await contract.connect(owner).setStatus(1);
 
-    await contract
-      .connect(owner)
-      .airdrop([member.address, user1.address], [2, 1]);
+    await contract.connect(owner).airdrop([member.address, user1.address]);
   });
 
   it("#4 - Allow list mint", async function () {
@@ -76,7 +74,7 @@ describe("Web3WomenNewbie", function () {
 
     await contract.connect(owner).setMerkleRoot(root);
 
-    const amountIn = ethers.utils.parseEther("0.001");
+    const amountIn = ethers.utils.parseEther("0.0005");
     const proof = merkleTree.getHexProof(keccak256(user1.address));
     await contract.connect(user1).allowlistMint(proof, { value: amountIn });
   });

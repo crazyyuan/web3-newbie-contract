@@ -23,6 +23,7 @@ contract Web3WomenNewbieD4 is ERC721Enumerable, Ownable {
     Counters.Counter private _tokenIdCounter;
 
     uint256 public constant price = 0.001 ether;
+    uint256 public constant allowPrice = 0.0005 ether;
     string public baseURI;
     uint256 public maxSupply;
 
@@ -35,6 +36,7 @@ contract Web3WomenNewbieD4 is ERC721Enumerable, Ownable {
     ) ERC721("Web3WomenNewbieD4", "WNWD4") {
         baseURI = _baseURI;
         maxSupply = _maxSupply;
+        _tokenIdCounter.increment();
     }
 
     function setStatus(Status _status) external onlyOwner {
@@ -51,29 +53,24 @@ contract Web3WomenNewbieD4 is ERC721Enumerable, Ownable {
         require(totalSupply() < maxSupply, "Mint exceed max supply");
         require(price <= msg.value, "Ether value sent is not correct");
 
-        uint256 mintIndex = totalSupply();
-        _safeMint(_msgSender(), mintIndex + 1);
+        uint256 tokenId = _tokenIdCounter.current();
+        _safeMint(_msgSender(), tokenId);
+        _tokenIdCounter.increment();
     }
 
-    function airdrop(
-        address[] calldata receivers,
-        uint256[] calldata amounts
-    ) external onlyOwner {
+    function airdrop(address[] calldata receivers) external onlyOwner {
         require(status == Status.Started, "Didn't start");
-
-        require(
-            receivers.length == amounts.length,
-            "the length of accounts is not equal to amounts"
-        );
 
         uint256 total = totalSupply();
         for (uint256 i = 0; i < receivers.length; i++) {
-            total = total + amounts[i];
+            total = total + 1;
         }
         require(maxSupply >= total, "Exceeded max supply.");
 
         for (uint256 i = 0; i < receivers.length; i++) {
-            _safeMint(receivers[i], amounts[i]);
+            uint256 tokenId = _tokenIdCounter.current();
+            _safeMint(receivers[i], tokenId);
+            _tokenIdCounter.increment();
         }
     }
 
@@ -84,7 +81,7 @@ contract Web3WomenNewbieD4 is ERC721Enumerable, Ownable {
         );
 
         require(totalSupply() < maxSupply, "Mint exceed max supply");
-        require(price <= msg.value, "Ether value sent is not correct");
+        require(allowPrice <= msg.value, "Ether value sent is not correct");
 
         address from = _msgSender();
 
@@ -97,8 +94,11 @@ contract Web3WomenNewbieD4 is ERC721Enumerable, Ownable {
             "the whitelist mismatch."
         );
 
-        _safeMint(from, 1);
-        refundIfOver(price);
+        uint256 tokenId = _tokenIdCounter.current();
+        _safeMint(from, tokenId);
+        _tokenIdCounter.increment();
+
+        refundIfOver(allowPrice);
 
         whiteListMints[from] = 1;
     }
